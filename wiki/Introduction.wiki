@@ -3,11 +3,6 @@
 
 = Introduction =
 
-This is simple perl5 based tool which help to check the service and port status in a complex infrastructure environment using a simple configuration file.
-      
-      * [Introduction#Prerequisite Prerequisite]
-      * Installation
-      * How To
 
 = Prerequisite =
 
