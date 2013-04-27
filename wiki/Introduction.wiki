@@ -10,3 +10,11 @@ This is simple perl5 based tool which help to check the service and port status 
       * How To
 
 = Details =
+
+Prerequisite
+
+This section will describe the required application and module to setup this tool.
+    
+    # Download and install Perl5. 
+
+   *  Required Perl Module
