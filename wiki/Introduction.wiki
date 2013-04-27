@@ -1,5 +1,5 @@
 #summary Introduction to service and port monitoring tool.
-#labels Featured
+#labels Featured,Phase-Requirements,Phase-Implementation
 
 = Introduction =
 
@@ -9,12 +9,17 @@ This is simple perl5 based tool which help to check the service and port status 
       * Installation
       * How To
 
-= Details =
-
-Prerequisite
+= Prerequisite =
 
 This section will describe the required application and module to setup this tool.
     
-    # Download and install Perl5. 
+    # Download and install [http://www.perl.org/get.html Perl5]. 
 
-   *  Required Perl Module
+*  Required Perl Module
+    #  [http://search.cpan.org/~jmcnamara/Spreadsheet-WriteExcel-2.38/lib/Spreadsheet/WriteExcel.pm Spreadsheet::WriteExcel]
+    #  [http://search.cpan.org/~sherzodr/Config-Simple-4.59/Simple.pm Config::Simple]
+    #  [http://search.cpan.org/~gbarr/IO-1.25/lib/IO/Socket/INET.pm IO::Socket::INET]
+    #  [http://search.cpan.org/~lds/Crypt-CBC-2.32/CBC.pm Crypt::CBC]
+    #  [http://search.cpan.org/~gaas/MIME-Base64-3.13/Base64.pm MIME::Base64]
+    #  [http://search.cpan.org/~schwigon/Net-SSH-Perl-1.35/lib/Net/SSH/Perl.pm Net::SSH::Perl]
+    #  [http://search.cpan.org/~malay/Font-TTFMetrics-0.1/lib/Font/TTFMetrics.pm Font::TTFMetrics]
