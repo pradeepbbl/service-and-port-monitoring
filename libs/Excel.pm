@@ -22,13 +22,21 @@ Service and port monitoring.
 package Excel;
 use strict;
 use Spreadsheet::WriteExcel;
-
+use Config::Simple;
 
 use base "Exporter";
-our @EXPORT    = qw($workbook $stage $prod $up $down $service $dev autofit_columns);
+our @EXPORT    = qw(fnExcelReport  autofit_columns);
 
-sub fnExcelReport(){
 
+# Load config file and decalar global var
+my $cfg = new Config::Simple('./config/config.cfg');
+
+
+
+sub fnExcelReport{	
+
+	our $env = $_[0];
+    
     # Create a new Excel workbook
     my $workbook = Spreadsheet::WriteExcel->new("port_service.xls");
 
@@ -37,46 +45,24 @@ sub fnExcelReport(){
     my $down    =  $workbook->add_format(align => 'center', bold => 1, border   => 1, fg_color => 10);
     my $service = $workbook->add_format(size=>10,bold => 1);
 
-
-    # Add some worksheets
-    my $dev   = $workbook->add_worksheet("Dev");
-    my $stage = $workbook->add_worksheet("Stage");
-    my $prod  = $workbook->add_worksheet("Prod");
+    # Worksheet setup
+    my $worksheet =  $workbook->add_worksheet($env);
+    $worksheet-> add_write_handler(qr[\w], \&store_string_widths);
     
-    $dev->add_write_handler(qr[\w], \&store_string_widths);
-    $stage->add_write_handler(qr[\w], \&store_string_widths);
-    $prod->add_write_handler(qr[\w], \&store_string_widths);
-
-	$dev->write('B3', "Service Name", $heading);
-    $dev->write('C3', "Host Name", $heading);
-    $dev->write('D3', "NAT IP", $heading);
-    $dev->write('E3', "PID  ",  $heading);
-    $dev->write('F3', "PORT", $heading);
-    $dev->write('G3', "PORT Status", $heading);
-    $dev->write('H3', "Service Status", $heading);   
-
-    $stage->write('B3', "Service Name", $heading);
-    $stage->write('C3', "Host Name", $heading);
-    $stage->write('D3', "NAT IP", $heading);
-    $stage->write('E3', "PID  ",  $heading);
-    $stage->write('F3', "PORT", $heading);
-    $stage->write('G3', "PORT Status", $heading);
-    $stage->write('H3', "Service Status", $heading);   
- 
-    $prod->write('B3', "Service Name", $heading);
-    $prod->write('C3', "Host Name", $heading);
-    $prod->write('D3', "NAT IP", $heading);
-    $prod->write('E3', "PID  ",  $heading);
-    $prod->write('F3', "PORT", $heading);
-    $prod->write('G3', "PORT Status", $heading);
-    $prod->write('H3', "Service Status", $heading);
-
-
-    return($workbook,$stage,$prod,$up,$down,$service,$dev);
+    $worksheet->write('B3', "Service Name", $heading);
+    $worksheet->write('C3', "Host Name", $heading);
+    $worksheet->write('D3', "NAT IP", $heading);
+    $worksheet->write('E3', "PID  ",  $heading);
+    $worksheet->write('F3', "PORT", $heading);
+    $worksheet->write('G3', "PORT Status", $heading);
+    $worksheet->write('H3', "Service Status", $heading);
+	
+    
+    return($workbook,$worksheet,$up,$down,$service);
 }
 
 
-	###############################################################################
+    ###############################################################################
     #
     # Functions used for Autofit.
     #
@@ -179,4 +165,3 @@ sub fnExcelReport(){
     
     }
 
-our($workbook,$stage,$prod,$up,$down,$service,$dev) = fnExcelReport();
