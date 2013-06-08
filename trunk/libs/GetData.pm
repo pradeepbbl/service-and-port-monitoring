@@ -22,18 +22,16 @@ Service and port monitoring.
 package GetData;
 use strict;
 use Config::Simple;
-use IO::Socket::INET;
+use Data::Dumper;
+
 
 use base "Exporter";
-our @EXPORT    = qw( %stg %prod %dev fnGetSer fnGetName);
+our @EXPORT    = qw( fnGetHash fnGetSer fnGetName fnGetEnv);
 
 
 
 # Load config file and decalar global var
 my $cfg = new Config::Simple('./config/config.cfg');
-my @data = ();
-my @active = ();
-
 
 
 #Global Function
@@ -50,15 +48,22 @@ sub fnGetName {
 	return($data);
 }
 
+sub fnGetEnv {
+	my @data = $cfg->param('Env_List.Env_Name');
+	return(@data);
+}
 
-sub fnDevMain(){
+
+sub fnGetHash{
+	our $env = $_[0];
+	
 	my @data = ();
 	my %hash = ();
-	
-	my @services = $cfg->param('DEV_Service_List.Service List');
+
+	my @services = $cfg->param($env.'_Service_List'.'.'.'Service List');
 	
 	foreach my $service (@services){
-    my $app_pool 	 = $cfg->param($service.'.'.'Hosted On');		
+        my $app_pool 	 = $cfg->param($service.'.'.'Hosted On');		
 	$hash{$cfg->param($service.'.'.'Service Name')} = (
 			   {	
 				port     => [$cfg->param($service.'.'.'Port List')],
@@ -71,59 +76,7 @@ sub fnDevMain(){
 	push(@data,\%hash);			
 	}
 	
-	return(%hash);
+	return(\%hash);
 }
-
-sub fnStgMain(){
-	my @data = ();
-	my %hash = ();
-	
-	my @services = $cfg->param('STG_Service_List.Service List');
-	
-	foreach my $service (@services){
-    my $app_pool 	 = $cfg->param($service.'.'.'Hosted On');		
-	$hash{$cfg->param($service.'.'.'Service Name')} = (
-			   {	
-				port     => [$cfg->param($service.'.'.'Port List')],
-				app_pool => $cfg->param($service.'.'.'Hosted On'),
-				ip_list  => [$cfg->param($app_pool.'.'.'Nat IP')],
-				command  => $cfg->param($service.'.'.'Command') 
-				}
-			 
-			);
-	push(@data,\%hash);			
-	}
-	
-	return(%hash);
-}
-
-sub fnProdMain(){
-	my @data = ();
-	my %hash = ();
-	
-	my @services = $cfg->param('Prod_Service_List.Service List');
-	
-	foreach my $service (@services){
-    my $app_pool 	 = $cfg->param($service.'.'.'Hosted On');		
-	$hash{$cfg->param($service.'.'.'Service Name')} = (
-			   {	
-				port => [$cfg->param($service.'.'.'Port List')],
-				app_pool => $cfg->param($service.'.'.'Hosted On'),
-				ip_list => [$cfg->param($app_pool.'.'.'Nat IP')],
-				command  => $cfg->param($service.'.'.'Command')
-				}
-			 
-			);
-	push(@data,\%hash);			
-	}
-	
-	return(%hash);
-}
-
-our  %dev  = fnDevMain();
-our  %stg  = fnStgMain();
-our  %prod = fnProdMain();
-
-
 
 1;
